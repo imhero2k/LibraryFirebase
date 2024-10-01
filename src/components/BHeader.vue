@@ -1,62 +1,63 @@
 <template>
   <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Health Charity</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <router-link to="/" class="nav-link" active-class="active" aria-current="page">
-              Home (Week 5)
-            </router-link>
-          </li>
-          <li class="nav-item" v-if="isAuthenticated">
-            <router-link to="/about" class="nav-link" active-class="active">
-              About
-            </router-link>
-          </li>
-          <li class="nav-item" v-if="!isAuthenticated">
-            <router-link to="/login" class="nav-link" active-class="active">
-              Login
-            </router-link>
-          </li>
-          <li class="nav-item" v-if="isAuthenticated">
-            <a href="#" class="nav-link" @click="logout">Logout</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <header class="d-flex justify-content-center py-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <router-link to="/" class="nav-link" active-class="active" aria-current="page">Home (Week 5)</router-link>
+        </li>
+
+        <li class="nav-item" v-if="isAuthenticated && userRole === 'user'">
+          <router-link to="/user-dashboard" class="nav-link" active-class="active">User Dashboard</router-link>
+        </li>
+
+        <li class="nav-item" v-if="isAuthenticated && userRole === 'admin'">
+          <router-link to="/admin-dashboard" class="nav-link" active-class="active">Admin Dashboard</router-link>
+        </li>
+
+        <li class="nav-item">
+          <router-link to="/FireRegister" class="nav-link" active-class="active">Firebase Register</router-link>
+        </li>
+
+        <li class="nav-item">
+          <router-link to="/Firelogin" class="nav-link" active-class="active">Firebase Login</router-link>
+        </li>
+
+        <li class="nav-item">
+          <router-link to="/addbook" class="nav-link" active-class="active">Add Book</router-link>
+        </li>
+
+        <li class="nav-item" v-if="isAuthenticated">
+          <a href="#" class="nav-link" @click.prevent="logout">Logout</a>
+        </li>
+      </ul>
+    </header>
   </div>
 </template>
 
-<script>
-export default {
-  setup() {
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+<script setup>
+import { ref } from 'vue';
+import { getAuth, signOut } from 'firebase/auth'; // Import Firebase auth functions
+import { useRouter } from 'vue-router';
 
-    const logout = () => {
-      localStorage.removeItem('isAuthenticated');
-      location.reload();
-    };
+const isAuthenticated = ref(localStorage.getItem('isAuthenticated') === 'true');
+const userRole = ref(localStorage.getItem('userRole')); // Fetch the user role from localStorage
+const auth = getAuth();
+const router = useRouter();
 
-    return { isAuthenticated, logout };
+const logout = async () => {
+  try {
+    await signOut(auth); // Sign out from Firebase
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userRole'); // Remove the stored user role
+    isAuthenticated.value = false;
+    userRole.value = null;
+    router.push('/'); // Redirect to the home page or login page
+  } catch (error) {
+    console.error("Sign out error:", error);
   }
-}
+};
 </script>
 
 <style scoped>
-.navbar-brand {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
+/* Add any additional styling for the navigation */
 </style>
