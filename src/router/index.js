@@ -10,6 +10,8 @@ import AdminDashboard from '@/views/AdminDashboard.vue';
 import logoutView from '@/views/logoutView.vue';
 import { getAuth } from 'firebase/auth';
 import { getDoc, doc, getFirestore } from 'firebase/firestore';
+import GetBookCountView from '@/views/GetBookCountView.vue';
+import Weather from '@/views/Weather.vue';
 
 const routes = [
   {
@@ -22,6 +24,11 @@ const routes = [
     name: 'About',
     component: AboutView,
     meta: { requiresAuth: true } // Protecting the About page
+  },
+  {
+    path: '/Weather',
+    name: 'Weather',
+    component: Weather
   },
   {
     path: '/FireLogin',
@@ -42,6 +49,12 @@ const routes = [
     path: '/logoutView',
     name: 'logout',
     component: logoutView
+  },
+  {
+    path: '/bookcount',
+    name: 'BookCount',
+    component: GetBookCountView,
+
   },
   {
     path: '/addbook',
