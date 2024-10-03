@@ -12,6 +12,7 @@ import { getAuth } from 'firebase/auth';
 import { getDoc, doc, getFirestore } from 'firebase/firestore';
 import GetBookCountView from '@/views/GetBookCountView.vue';
 import Weather from '@/views/Weather.vue';
+import CountBookAPI from '@/views/CountBookAPI.vue';
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     name: 'About',
     component: AboutView,
     meta: { requiresAuth: true } // Protecting the About page
+  },
+  {
+    path: '/CountBookAPI',
+    name: 'CountBookAPI',
+    component: CountBookAPI,
   },
   {
     path: '/Weather',

@@ -1,6 +1,6 @@
-const {onRequest} = require("firebase-functions/v2/https");
+const { onRequest } = require("firebase-functions/v2/https");
 const admin = require("firebase-admin");
-const cors = require("cors")({origin: true});
+const cors = require("cors")({ origin: true });
 
 admin.initializeApp();
 
@@ -11,7 +11,7 @@ exports.countBooks = onRequest((req, res) => {
       const snapshot = await booksCollection.get(); // Fetch all documents
       const count = snapshot.size; // Get the count of documents
 
-      res.status(200).send({count});
+      res.status(200).send({ count }); 
     } catch (error) {
       console.error("Error counting books:", error.message);
       res.status(500).send("Error counting books"); // Send error response

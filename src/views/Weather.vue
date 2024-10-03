@@ -3,8 +3,10 @@
       <h1>Weather Check</h1>
       <!-- Input field for city name -->
       <input v-model="city" placeholder="Enter city name" />
-      <!-- Button to search for weather data -->
+      <!-- Button to search for weather data by city -->
       <button @click="searchByCity">Search</button>
+      <!-- Button to get weather data for current location -->
+      <button @click="getCurrentLocation">Use Current Location</button>
   
       <main>
         <!-- Display weather data if available -->
@@ -25,7 +27,6 @@
   <script>
   import axios from "axios";
   
-  // You need to replace 'YOUR_API_KEY' with your actual OpenWeatherMap API key.
   const apikey = "42506e8480b925c15edb913d8812c89c";
   
   export default {
@@ -55,6 +56,23 @@
       async searchByCity() {
         const url = `http://api.openweathermap.org/data/2.5/weather?q=${this.city}&appid=${apikey}`;
         await this.fetchWeatherData(url); // Fetch weather data using the API
+      },
+      // Method to get weather data for the user's current location
+      async getCurrentLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              const { latitude, longitude } = position.coords;
+              const url = `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apikey}`;
+              await this.fetchWeatherData(url);
+            },
+            (error) => {
+              console.error("Error getting location:", error);
+            }
+          );
+        } else {
+          console.error("Geolocation is not supported by this browser.");
+        }
       },
       // Method to fetch weather data from the API
       async fetchWeatherData(url) {
@@ -89,6 +107,7 @@
     color: white;
     border: none;
     cursor: pointer;
+    margin-right: 0.5rem;
   }
   
   button:hover {
